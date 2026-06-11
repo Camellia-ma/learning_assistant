@@ -10,3 +10,4 @@ API_KEY = os.getenv("DASHSCOPE_API_KEY")                # Api key设置
 # 模型名称
 RAG_MODEL = "deepseek-v4-flash"      # RAG 流程使用deepseek-v4-flash
 EMBEDDING_MODEL = "text-embedding-v4"     # 阿里云最新通用文本向量化模型
+AGENT_MODEL = "qwen3.7-max-2026-05-17"   # agent 使用的模型

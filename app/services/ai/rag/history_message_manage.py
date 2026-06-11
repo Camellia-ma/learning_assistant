@@ -74,7 +74,3 @@ def save_history_message(file_name: str, history_message: List[BaseMessage]):
         print(f"保存历史记录失败 {history_file}: {e}")
 
 
-# 可选：添加一个查看历史文件的辅助函数（调试用）
-def get_history_file_path(file_name: str) -> str:
-    """返回历史文件完整路径"""
-    return str(get_history_file(file_name))
