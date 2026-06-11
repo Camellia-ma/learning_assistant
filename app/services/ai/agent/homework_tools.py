@@ -1,8 +1,5 @@
 """ homework-agent 工具箱 """
 
-""" 
-Agent 工具箱定义 (app/services/ai/agent/tools.py)
-"""
 from langchain_core.tools import tool
 from app.services.homework.homework_services import *
 from datetime import datetime

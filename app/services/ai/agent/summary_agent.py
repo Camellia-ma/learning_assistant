@@ -1,33 +1,22 @@
-""" 作业处理agent """
+""" 对话总结 agent """
 from langchain.agents import create_agent
 from app.services.ai.agent.model_config import *
-
-# 导入工具箱
-from app.services.ai.agent.homework_tools import (
-    add_new_homework_tool,
-    get_all_homework_tool,
-    get_pending_homework_tool,
-    update_homework_status_tool,
-    get_now_time_tool
+from app.services.ai.agent.summary_tools import (
+    save_summary,
+    load_chat_history,
+    get_all_chat_names
 )
 
 
-class HomeworkAgentService:
+class SummaryAgentService:
     def __init__(self):
-        # 收集并打包所有工具
         self.tools = [
-            add_new_homework_tool,
-            get_all_homework_tool,
-            get_pending_homework_tool,
-            update_homework_status_tool,
-            get_now_time_tool
+            get_all_chat_names,
+            load_chat_history,
+            save_summary,
         ]
-        # 设置模型
         self.model = agent_model
-
-        # 构建 Agent 的系统提示词 (System Prompt)
-        self.system_prompt = homework_agent_prompt
-        # 构建agent
+        self.system_prompt = summary_agent_prompt
         self.agent = create_agent(
             model=self.model,
             tools=self.tools,
@@ -41,7 +30,6 @@ class HomeworkAgentService:
         messages = []
         messages.append({"role": "user", "content": user_input})
         response = self.agent.invoke({"messages": messages})
-
         if isinstance(response, dict):
             if "output" in response:
                 return response["output"]

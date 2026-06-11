@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.rag.controller import router as rag_router
 from app.api.agent.controller import router as agent_router
+from app.api.upload.controller import router as upload_router
 import uvicorn
 app = FastAPI(
     title="AI 学习助手后端 API",
@@ -28,6 +29,9 @@ app.include_router(rag_router, prefix="/api")
 
 # 注册 Agent 模块路由
 app.include_router(agent_router, prefix="/api")
+
+# 注册上传模块路由
+app.include_router(upload_router, prefix="/api")
 
 @app.get("/")
 async def root():
