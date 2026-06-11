@@ -1,7 +1,7 @@
 """ 配置 RAG 使用的模型以及提示词 """
 # 阿里云向量化模型
 from langchain_community.embeddings import DashScopeEmbeddings
-from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate,MessagesPlaceholder
 from langchain_openai import ChatOpenAI  # 接口
 from app.config import *
 
@@ -32,5 +32,6 @@ rag_system_prompt = (
         )
 prompt = ChatPromptTemplate.from_messages([
         ("system", rag_system_prompt),
+        MessagesPlaceholder(variable_name="history"),   # 历史消息占位符
         ("human", "{input}"),
 ])

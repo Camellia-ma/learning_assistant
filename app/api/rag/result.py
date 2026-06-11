@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 # 接收格式
 class ChatRequest(BaseModel):
     question: str = Field(..., description="学生的提问内容")
+    chat_name: str = Field(..., description="对话名称")
 
 # 返回格式
 class ChatResponse(BaseModel):

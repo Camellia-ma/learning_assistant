@@ -3,7 +3,10 @@ from langchain_classic.chains.combine_documents import create_stuff_documents_ch
 from langchain_classic.chains.retrieval import create_retrieval_chain
 from app.services.ai.rag.document_operation import load_documents, split_documents, build_vector_store
 from app.services.ai.rag.model_config import create_rag_model, create_embedding_model,prompt
+# 消息对象：人类用户消息以及大语言模型返回消息
+from langchain_core.messages import HumanMessage, AIMessage
 import os
+from app.services.ai.rag.history_message_manage import load_history_message,save_history_message
 # 开源本地向量库
 from langchain_community.vectorstores import FAISS
 
@@ -40,19 +43,25 @@ class RAG:
         return f"知识库构建成功，共处理了 {len(chunks)} 个文本切片"
 
     # 问答函数
-    def query(self,user_question:str):
-
+    def query(self,user_question:str,history_file_name:str = "default"):
         if not self.vector_store:
             return "系统知识库尚未初始化，请联系老师上传资料。"
 
+        # 加载历史消息
+        history_message = load_history_message(history_file_name)
         # 将向量库转为检索器 -- 返回最相关的k个文本
         retriever = self.vector_store.as_retriever(search_kwargs={"k": 3})
-
         # 组装 RAG 链 (Chain)
         question_answer_chain = create_stuff_documents_chain(self.model, prompt)
         rag_chain = create_retrieval_chain(retriever, question_answer_chain)
         # 执行检索并生成回答
-        response = rag_chain.invoke({"input": user_question})
-
+        response = rag_chain.invoke({
+            "history": history_message,
+            "input": user_question
+        })
+        # 5. 保存历史记录（Human + AI）
+        history_message.append(HumanMessage(content=user_question))
+        history_message.append(AIMessage(content=response["answer"]))
+        save_history_message(history_file_name, history_message)
         # 返回最终文本回答
         return response["answer"]

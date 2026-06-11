@@ -6,3 +6,4 @@ langchain-classic
 fastapi
 pydantic
 uvicorn
+langchain-core

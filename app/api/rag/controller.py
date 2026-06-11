@@ -1,7 +1,7 @@
 """ RAG API控制路由 """
 """AI 对话、Agent 规划、RAG 问答 API（核心）"""
 from fastapi import APIRouter, HTTPException, status
-from app.schemas.result import ChatRequest, ChatResponse, InitDBResponse
+from app.api.rag.result import ChatRequest, ChatResponse, InitDBResponse
 from app.services.ai.rag.RAG import RAG
 
 router = APIRouter(prefix="/rag", tags=["AI 学习助手 -- rag 流程"])
@@ -37,7 +37,7 @@ async def rag_chat(payload: ChatRequest):
 
     try:
         # 调用 RAG 实例获取大模型回答
-        ai_answer = RAGBot.query(payload.question)
+        ai_answer = RAGBot.query(payload.question,payload.chat_name)
         return ChatResponse(answer=ai_answer, status="success")
     except Exception as e:
         raise HTTPException(
